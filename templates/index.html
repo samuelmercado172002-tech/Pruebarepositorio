@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #0f172a, #1a0f2e, #2d0a4e, #0f172a);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .contenedor {
+            width: 100%;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 50px rgba(56, 189, 248, 0.2), 0 0 100px rgba(139, 92, 246, 0.1);
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                box-shadow: 0 0 50px rgba(56, 189, 248, 0.2), 0 0 100px rgba(139, 92, 246, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 70px rgba(56, 189, 248, 0.4), 0 0 120px rgba(139, 92, 246, 0.2);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.8em;
+            background: linear-gradient(135deg, #38bdf8, #06b6d4, #0ea5e9, #38bdf8);
+            background-size: 300% 300%;
+            animation: gradientFlow 3s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .usuario-info {
+            color: #94a3b8;
+            font-size: 1em;
+            letter-spacing: 1px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .usuario-info strong {
+            color: #38bdf8;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            padding: 18px 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ef4444;
+            border-right: 2px solid #ef4444;
+            font-size: 0.95em;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .chat {
+            margin-bottom: 30px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            height: 480px;
+            overflow-y: auto;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            scroll-behavior: smooth;
+            box-shadow: inset 0 0 30px rgba(56, 189, 248, 0.1);
+        }
+
+        .chat::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .chat::-webkit-scrollbar-track {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 10px;
+        }
+
+        .chat::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #38bdf8, #8b5cf6);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .chat::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #0ea5e9, #a78bfa);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.7);
+        }
+
+        .mensaje {
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            animation: messageSlideIn 0.5s ease;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .usuario {
+            color: #7dd3fc;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .usuario-texto {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(6, 182, 212, 0.1));
+            padding: 15px 20px;
+            border-radius: 15px;
+            border-left: 4px solid #38bdf8;
+            border-right: 2px solid #0ea5e9;
+            color: #e2e8f0;
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: 0 5px 20px rgba(56, 189, 248, 0.15), inset 0 0 20px rgba(56, 189, 248, 0.05);
+            animation: slideInRight 0.6s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .usuario-texto::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .asistente {
+            color: #4ade80;
+            margin-bottom: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .asistente::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .asistente-texto {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.15), rgba(34, 197, 94, 0.1));
+            padding: 15px 20px;
+            border-radius: 15px;
+            border-left: 4px solid #22c55e;
+            border-right: 2px solid #4ade80;
+            color: #e2e8f0;
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: 0 5px 25px rgba(74, 222, 128, 0.2), inset 0 0 20px rgba(74, 222, 128, 0.08);
+            animation: slideInLeft 0.6s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .asistente-texto::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(74, 222, 128, 0.2), transparent);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .asistente-texto.typing::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 20px;
+            background: #4ade80;
+            margin-left: 5px;
+            animation: blink 0.7s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 49%, 100% { opacity: 1; }
+            50%, 99% { opacity: 0; }
+        }
+
+        .separador {
+            border: none;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .separador::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            top: -1px;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+            animation: expandWidth 2s ease-in-out infinite;
+        }
+
+        @keyframes expandWidth {
+            0%, 100% { scaleX:(0.5); }
+            50% { scaleX:(1); }
+        }
+
+        form {
+            display: flex;
+            gap: 15px;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        button {
+            flex: 1;
+            padding: 18px 30px;
+            font-size: 1.1em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #06b6d4, #0ea5e9);
+            background-size: 200% 200%;
+            animation: buttonGradient 3s ease infinite;
+            border: 2px solid rgba(56, 189, 248, 0.5);
+            border-radius: 15px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3), 0 8px 25px rgba(56, 189, 248, 0.2);
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes buttonGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: buttonShine 3s infinite;
+        }
+
+        @keyframes buttonShine {
+            0% { transform: translate(-100%, -100%); }
+            100% { transform: translate(100%, 100%); }
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.5), 0 15px 40px rgba(56, 189, 248, 0.3);
+            border-color: rgba(56, 189, 248, 0.8);
+        }
+
+        button:active {
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contenedor {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .chat {
+                height: 380px;
+                padding: 20px;
+            }
+
+            button {
+                padding: 15px 20px;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .contenedor {
+                padding: 15px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .chat {
+                height: 300px;
+                padding: 15px;
+            }
+
+            button {
+                padding: 13px 16px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenedor">
+        <div class="header">
+            <h1>🤖 Asistente Inteligente</h1>
+            <p class="usuario-info">Usuario: <strong>{{ nombre }}</strong></p>
+        </div>
+
+        {% if error %}
+            <div class="error-message">
+                ⚠️ {{ error }}
+            </div>
+        {% endif %}
+
+        <div class="chat">
+            {% for item in conversacion %}
+                <div class="mensaje">
+                    <p class="usuario">👤 Usuario</p>
+                    <div class="usuario-texto">{{ item.usuario }}</div>
+
+                    <p class="asistente">🤖 Asistente</p>
+                    <div class="asistente-texto">{{ item.respuesta }}</div>
+
+                    <hr class="separador">
+                </div>
+            {% endfor %}
+        </div>
+
+        <form method="POST">
+            <button type="submit">🎤 Hablar</button>
+        </form>
+    </div>
+</body>
+
+</html>
