@@ -8,9 +8,10 @@
 - Voz natural con Edge-TTS
 - Registro del nombre del usuario
 - Historial de conversación
+### Versión 2
 - Se extendio las extenciones de guardado como archivos de excel powerpoint, word, txt, .py, comprimidos
 
-### versión 2
+### versión 3
 -Se integró un módulo de reconocimiento facial utilizando OpenCV. Se desarrolló una función para activar la cámara web, detectar rostros mediante Haar Cascade, crear automáticamente un dataset por persona y almacenar las imágenes capturadas. Además, se añadió un comando de voz al asistente para iniciar el proceso de captura de rostros de manera automática.
 para futuras etapas de entrenamiento y reconocimiento.
 
