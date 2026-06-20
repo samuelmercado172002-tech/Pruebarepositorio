@@ -1,7 +1,0 @@
-flask
-gunicorn
-speechrecognition
-edge_tts
-pygame
-opencv-python
-imutils
