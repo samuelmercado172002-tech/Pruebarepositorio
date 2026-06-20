@@ -1,7 +1,7 @@
 flask
 gunicorn
 speechrecognition
-edge-tts
+edge_tts
 pygame
 opencv-python
 imutils
