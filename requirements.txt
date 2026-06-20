@@ -1,3 +1,7 @@
 flask
 gunicorn
 speechrecognition
+edge-tts
+pygame
+opencv-python
+imutils
